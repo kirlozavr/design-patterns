@@ -23,8 +23,12 @@ internal class Euro: Currency {
     override fun code(): String = "EUR"
 }
 
-internal object CurrencyFactory {
-    internal fun currencyByCountry(country: String): Currency {
+internal interface Factory {
+    fun currencyByCountry(country: String): Currency
+}
+
+internal object CurrencyFactory: Factory {
+    override fun currencyByCountry(country: String): Currency {
         return when(country) {
             "Russia" -> Rubble()
             "USA" -> Dollar()

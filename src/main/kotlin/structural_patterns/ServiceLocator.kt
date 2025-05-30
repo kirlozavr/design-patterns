@@ -1,4 +1,4 @@
-package creational_patterns
+package structural_patterns
 
 internal fun serviceLocator() {
     println("\nServiceLocator Pattern")

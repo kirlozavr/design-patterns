@@ -5,32 +5,40 @@ internal fun facade() {
 
     val audioPlayer = AudioPlayer()
     val videoPlayer = VideoPlayer()
-    val facade = Facade(
+    val mediaHosting = SomeMediaHosting(
         audioPlayer = audioPlayer,
         videoPlayer = videoPlayer
     )
-    facade.play("file name")
+    mediaHosting.watchVideo("The best video")
 }
 
-internal class AudioPlayer {
-    internal fun play(fileName: String) {
-        println("AudioPlayer is playing")
+internal interface Player {
+    fun play(name: String)
+}
+
+internal class AudioPlayer: Player {
+    override fun play(name: String) {
+        println("AudioPlayer is playing the \"$name\"")
     }
 }
 
-internal class VideoPlayer {
-    internal fun play(fileName: String) {
-        println("VideoPlayer is playing")
+internal class VideoPlayer: Player {
+    override fun play(name: String) {
+        println("VideoPlayer is playing the \"$name\"")
     }
 }
 
-internal class Facade constructor(
+internal interface VideoHosting {
+    fun watchVideo(name: String)
+}
+
+internal class SomeMediaHosting constructor(
     private val audioPlayer: AudioPlayer,
     private val videoPlayer: VideoPlayer
-) {
+): VideoHosting {
 
-    internal fun play(fileName: String) {
-        audioPlayer.play(fileName = fileName)
-        videoPlayer.play(fileName = fileName)
+    override fun watchVideo(name: String) {
+        audioPlayer.play(name = name)
+        videoPlayer.play(name = name)
     }
 }

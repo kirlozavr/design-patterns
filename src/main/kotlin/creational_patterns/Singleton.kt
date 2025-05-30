@@ -3,8 +3,7 @@ package creational_patterns
 internal fun singleton() {
     println("\nSingleton Pattern")
 
-    val singletonA = SingletonA
-    singletonA.printHello()
+    SingletonA.printHello()
 
     val singletonB = SingletonB.getInstance()
     singletonB.printHello()

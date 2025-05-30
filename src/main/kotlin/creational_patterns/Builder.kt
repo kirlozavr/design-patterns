@@ -4,8 +4,8 @@ internal fun builder() {
     println("\nBuilder Pattern")
 
     val person = Builder(name = "Bob")
-        .setAge(1)
-        .setHeight(1)
+        .setAge(18)
+        .setHeight(190)
         .build()
     println(person)
 }
