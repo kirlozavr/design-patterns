@@ -2,11 +2,9 @@
 
 ## Архитектурные паттерны
 
-### MVVM
+## MVVM
 
----
-
-#### Как устроен?
+### Как устроен?
 
 Архитектурный паттерн `MVVM` состоит из:
 1) `Model` - слой данных и бизнес логики;
@@ -25,11 +23,9 @@ View слой не должен иметь никакой логики, кром
 
 ![img.png](images/img1.png)
 
-### MVI
+## MVI
 
----
-
-#### Как устроен?
+### Как устроен?
 
 Архитектурный паттерн `MVI` состоит из:
 1) `Model` - слой данных и бизнес логики;
@@ -48,8 +44,6 @@ View уведомляет ViewModel о событиях через `viewModel.on
 ![img.png](images/img2.png)
 
 ## Паттерны проектирования
-
----
 
 Паттерны проектирования я бы описал как набор практик для решения типовых задач и/или проблем.
 Базово они делятся на 3 категории:
@@ -79,13 +73,11 @@ View уведомляет ViewModel о событиях через `viewModel.on
 5) ChainOfResponsibility;
 6) Mediator.
 
-### Creational patterns
+## Creational patterns
 
----
+`Creational patterns` решают проблему создания объектов.
 
-### Builder
-
----
+## Builder
 
 Паттерн `Строитель` используется для гибкого создания объектов. 
 
@@ -141,9 +133,7 @@ val person = Builder(name = "Bob")
 Person(name=Bob, age=18, height=190)
 ```
 
-### Singleton
-
----
+## Singleton
 
 `Singleton` или же паттерн `Одиночка` гарантирует, что существует только один экземпляр объекта в момент работы программы.
 
@@ -196,9 +186,7 @@ Hello from SingletonA
 Hello from SingletonB
 ```
 
-### Factory Method
-
----
+## Factory Method
 
 `Фабричный метод` абстрагирует создание объектов, так что тип создаваемого экземпляра может быть определен в runtime.
 
@@ -250,9 +238,7 @@ println(currency.code())
 USD
 ```
 
-### Abstract Factory
-
----
+## Abstract Factory
 
 `Абстрактная фабрика` абстрагирует создание целой группы объектов и делегирует эту работу своим подклассам. Конкретная группа может быть определена как в runtime, так и во время компиляции.
 
@@ -345,13 +331,11 @@ Android Button clicked
 Android Dialog showed
 ```
 
-### Structural patterns
+## Structural patterns
 
----
+`Structural patterns` упрощают организацию классов.
 
-### Decorator
-
----
+## Decorator
 
 Паттерн `Decorator` позволяет расширять и/или изменять функциональность объектов.
 Обеспечивается это путем заворачивания объекта в класс-обертку. 
@@ -385,9 +369,7 @@ listPrinter.add(966)
 966
 ```
 
-### Adapter
-
----
+## Adapter
 
 `Adapter` позволяет связывать 2 несовместимых объекта
 
@@ -470,9 +452,7 @@ OldPrinter printed the "(Hello) message"
 The Canvas drew "Some message from the UiAdapter"
 ```
 
-### Facade
-
----
+## Facade
 
 `Facade` облегчает работу с более сложной системой путем предоставления упрощенного интерфейса.
 
@@ -530,9 +510,7 @@ AudioPlayer is playing the "The best video"
 VideoPlayer is playing the "The best video"
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -554,9 +532,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -578,9 +554,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -602,9 +576,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -626,9 +598,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -650,9 +620,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -674,9 +642,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -698,9 +664,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -722,9 +686,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -746,9 +708,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -770,9 +730,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -794,9 +752,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -818,9 +774,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -842,9 +796,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
@@ -866,9 +818,7 @@ VideoPlayer is playing the "The best video"
 
 ```
 
-### {Название}
-
----
+## {Название}
 
 
 
