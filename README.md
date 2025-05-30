@@ -63,14 +63,14 @@ View уведомляет ViewModel о событиях через `viewModel.on
 3) Facade;
 4) Composite;
 5) Proxy;
-6) ServiceLocator (Отдельно от остальных).
+6) Service Locator (Отдельно от остальных).
 
 К **поведенческим паттернам** относятся:
 1) Command;
 2) Observer;
 3) Strategy;
 4) State;
-5) ChainOfResponsibility;
+5) Chain Of Responsibility;
 6) Mediator.
 
 ## Creational patterns
@@ -510,70 +510,208 @@ AudioPlayer is playing the "The best video"
 VideoPlayer is playing the "The best video"
 ```
 
-## {Название}
+## Composite
 
-
+`Composite` помогает группировать объекты в древовидную структуру для представления иерархии от частного к целому. Позволяет одинаково работать как с отдельными объектами, так и с группой.
 
 **Реализация:**
 
 ```kotlin
+internal interface FileSystem {
+    fun show(indent: String)
+}
 
+internal class File constructor(
+    private val name: String
+): FileSystem {
+
+    override fun show(indent: String) {
+        println("${indent}File( $name )")
+    }
+}
+
+internal class Directory constructor(
+    private val name: String
+): FileSystem {
+
+    private val children = mutableListOf<FileSystem>()
+
+    internal fun add(fileSystem: FileSystem) {
+        children.add(fileSystem)
+    }
+
+    override fun show(indent: String) {
+        println("${indent}Directory( $name ):")
+        children.forEach { it.show("$indent    ") }
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
-
+val directoryA = Directory("directoryA").apply {
+    add(File("fileA1.txt"))
+    add(File("fileA2.txt"))
+}
+val directoryB = Directory("directoryB").apply {
+    add(File("fileB1.txt"))
+    add(File("fileB2.txt"))
+    add(File("fileB3.txt"))
+}
+val directoryC = Directory("directoryC").apply {
+    add(File("fileC1.txt"))
+    add(directoryA)
+}
+val root = Directory("root").apply {
+    add(directoryB)
+    add(directoryC)
+}
+root.show("")
 ```
 
 **Вывод:**
 
 ```txt
-
+Directory( root ):
+    Directory( directoryB ):
+        File( fileB1.txt )
+        File( fileB2.txt )
+        File( fileB3.txt )
+    Directory( directoryC ):
+        File( fileC1.txt )
+        Directory( directoryA ):
+            File( fileA1.txt )
+            File( fileA2.txt )
 ```
 
-## {Название}
+## Proxy
 
-
+`Proxy` предоставляет объект-заместитель, контролирующий доступ к другому объекту.
 
 **Реализация:**
 
 ```kotlin
+internal interface Subject {
+    fun operation(): String
+}
 
+internal class RealSubject: Subject {
+    override fun operation(): String {
+        return "This is real Subject"
+    }
+}
+
+internal class ProxySubject constructor(
+    private val subject: Subject
+): Subject {
+
+    override fun operation(): String {
+        return "${subject.operation()} with proxy Subject"
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
-
+val realSubject = RealSubject()
+val proxySubject = ProxySubject(realSubject)
+val result = proxySubject.operation()
+println(result)
 ```
 
 **Вывод:**
 
 ```txt
-
+This is real Subject with proxy Subject
 ```
 
-## {Название}
+## Service Locator
 
-
+`Service Locator` необходим для создания, хранения и возврата экземпляра объекта (Сервиса) по требованию. 
 
 **Реализация:**
 
 ```kotlin
+internal interface Service {
+    fun getName(): String
+}
 
+internal class FirstService: Service {
+    override fun getName(): String = "FirstService"
+}
+
+internal class SecondService: Service {
+    override fun getName(): String = "SecondService"
+}
+
+internal interface CacheManager {
+    fun addService(service: Service)
+
+    fun <T : Service> getService(serviceKClass: KClass<T>): T?
+}
+
+internal class CacheManagerImpl: CacheManager {
+    private val services = mutableSetOf<Service>()
+
+    override fun addService(service: Service) {
+        services.add(service)
+    }
+
+    override fun <T : Service> getService(serviceKClass: KClass<T>): T? {
+        return services.find { serviceKClass.isInstance(it) } as T?
+    }
+}
+
+internal interface ServiceCreator {
+
+    fun <T: Service> createService(serviceKClass: KClass<T>): Service
+}
+
+internal class ServiceCreatorImpl: ServiceCreator {
+    override fun <T : Service> createService(serviceKClass: KClass<T>): Service {
+        return when(serviceKClass) {
+            FirstService::class -> FirstService()
+            SecondService::class -> SecondService()
+            else -> throw IllegalStateException("The service must only be FirstService or SecondService")
+        }
+    }
+}
+
+internal object ServiceLocator {
+
+    private val cacheManager: CacheManager = CacheManagerImpl()
+    private val serviceCreator: ServiceCreator = ServiceCreatorImpl()
+
+    internal inline fun <reified T: Service> hasService(): Boolean {
+        return cacheManager.getService(T::class) != null
+    }
+
+    internal inline fun <reified T: Service> getService(): Service {
+        val service = cacheManager.getService(T::class)
+        if (service != null) return service
+
+        val newService = serviceCreator.createService(T::class) as T
+        cacheManager.addService(newService)
+        return newService
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
+val firstService = ServiceLocator.getService<FirstService>()
+val secondService = ServiceLocator.getService<SecondService>()
 
+println("The first service name is ${firstService.getName()} and the last one name is ${secondService.getName()}")
 ```
 
 **Вывод:**
 
 ```txt
-
+The first service name is FirstService and the last one name is SecondService
 ```
 
 ## {Название}
