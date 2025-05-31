@@ -63,7 +63,12 @@ View уведомляет ViewModel о событиях через `viewModel.on
 3) Facade;
 4) Composite;
 5) Proxy;
-6) Service Locator (Отдельно от остальных).
+6) Service Locator (Отдельно от остальных);
+7) Iterator;
+8) Interpreter;
+9) Memento;
+10) Visitor;
+11) Template.
 
 К **поведенческим паттернам** относятся:
 1) Command;
