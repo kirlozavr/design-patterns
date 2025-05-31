@@ -1469,47 +1469,81 @@ val receipt = Receipt()
 Total price is 450.0 and total weight is 1130.0
 ```
 
-## {Название}
+## Template
 
-
+`Template` паттерн помогает проектировать основу алгоритма, оставляя реализацию некоторых шагов подклассам.
 
 **Реализация:**
 
 ```kotlin
+internal data class Image(
+    val photoPath: String,
+    val description: String
+)
 
+internal abstract class ImageSaver {
+
+    internal fun saveImage(image: Image) {
+        val uploadLink = getUploadLink()
+        uploadImage(localPath = image.photoPath, uploadLink = uploadLink)
+        saveImageInfo(localPath = image.photoPath, description = image.description)
+    }
+
+    abstract fun getUploadLink(): String
+
+    abstract fun uploadImage(localPath: String, uploadLink: String)
+
+    abstract fun saveImageInfo(localPath: String, description: String)
+}
+
+internal class ProfileImageSaver: ImageSaver() {
+
+    override fun getUploadLink(): String {
+        return "profile upload link"
+    }
+
+    override fun uploadImage(localPath: String, uploadLink: String) {
+        println("Profile Image with localPath=$localPath and uploadLink=$uploadLink have been successfully uploaded")
+    }
+
+    override fun saveImageInfo(localPath: String, description: String) {
+        println("Profile Image Info with localPath=$localPath and description=$description have been successfully uploaded")
+    }
+}
+
+internal class MessageImageSaver: ImageSaver() {
+
+    override fun getUploadLink(): String {
+        return "message upload link"
+    }
+
+    override fun uploadImage(localPath: String, uploadLink: String) {
+        println("Message Image with localPath=$localPath and uploadLink=$uploadLink have been successfully uploaded")
+    }
+
+    override fun saveImageInfo(localPath: String, description: String) {
+        println("Message Image Info with localPath=$localPath and description=$description have been successfully uploaded")
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
+val profileImageSaver = ProfileImageSaver()
+val profileImage = Image(photoPath = "Profile photo path", description = "Profile Image")
+profileImageSaver.saveImage(profileImage)
 
+val messageImageSaver = MessageImageSaver()
+val messageImage = Image(photoPath = "Message photo path", description = "Message Image")
+messageImageSaver.saveImage(messageImage)
 ```
 
 **Вывод:**
 
 ```txt
-
+Profile Image with localPath=Profile photo path and uploadLink=profile upload link have been successfully uploaded
+Profile Image Info with localPath=Profile photo path and description=Profile Image have been successfully uploaded
+Message Image with localPath=Message photo path and uploadLink=message upload link have been successfully uploaded
+Message Image Info with localPath=Message photo path and description=Message Image have been successfully uploaded
 ```
-
-## {Название}
-
-
-
-**Реализация:**
-
-```kotlin
-
-```
-
-**Применение:**
-
-```kotlin
-
-```
-
-**Вывод:**
-
-```txt
-
-```
-

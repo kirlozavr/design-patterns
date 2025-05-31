@@ -25,4 +25,5 @@ internal fun main(args: Array<String>) {
     interpreter()
     memento()
     visitor()
+    template()
 }
