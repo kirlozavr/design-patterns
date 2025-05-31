@@ -21,4 +21,8 @@ internal fun main(args: Array<String>) {
     state()
     chainOfResponsibility()
     mediator()
+    iterator()
+    interpreter()
+    memento()
+    visitor()
 }

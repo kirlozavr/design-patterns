@@ -1109,92 +1109,364 @@ bob received the message=Hello everyone!
 martin received the message=Hello everyone!
 ```
 
-## {Название}
+## Iterator
 
-
+`Iterator` позволяет проходить по элементам коллекции не раскрывая реализации.
 
 **Реализация:**
 
 ```kotlin
+internal interface Iterator <out T> {
 
+    fun hasNext(): Boolean
+
+    fun next(): T
+}
+
+internal class ListIterator <out T> constructor(
+    private val list: List<T>
+): Iterator<T> {
+
+    private var position: Int = 0
+
+    override fun hasNext(): Boolean {
+        return position != list.size
+    }
+
+    override fun next(): T {
+        return list[position++]
+    }
+}
+
+internal interface Iterable <out T> {
+    fun iterator(): Iterator<T>
+}
+
+internal class ListIterable <T> : Iterable<T> {
+
+    private val list = mutableListOf<T>()
+
+    internal fun add(element: T) {
+        list.add(element)
+    }
+
+    override fun iterator(): Iterator<T> {
+        return ListIterator(list = list)
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
+val listIterable = ListIterable<Int>()
+listIterable.add(1)
+listIterable.add(2)
+listIterable.add(3)
 
+val iterator = listIterable.iterator()
+while (iterator.hasNext()) {
+    val element = iterator.next()
+    println(element)
+}
 ```
 
 **Вывод:**
 
 ```txt
-
+1
+2
+3
 ```
 
-## {Название}
+## Interpreter
 
-
+`Interpreter` определяет грамматику языка и интерпретирует его выражения. Иными словами, данный паттерн позволяет описывать операции над языковыми конструкциями и их обработку/выполнение.
 
 **Реализация:**
 
 ```kotlin
+internal interface Expression {
+    fun interpret(): Float
+}
 
+internal class NumberExpression constructor(
+    private val value: Float
+): Expression {
+    override fun interpret(): Float {
+        return value
+    }
+}
+
+internal class AdditionExpression constructor(
+    private val left: Expression,
+    private val right: Expression
+): Expression {
+
+    override fun interpret(): Float {
+        return left.interpret() + right.interpret()
+    }
+}
+
+internal class SubtractionExpression constructor(
+    private val left: Expression,
+    private val right: Expression
+): Expression {
+
+    override fun interpret(): Float {
+        return left.interpret() - right.interpret()
+    }
+}
+
+internal class DivisionExpression constructor(
+    private val left: Expression,
+    private val right: Expression
+): Expression {
+
+    override fun interpret(): Float {
+        val divisor = right.interpret()
+        if (divisor == 0f) {
+            throw ArithmeticException("Division by zero")
+        }
+        return left.interpret() / divisor
+    }
+}
+
+internal class MultiplicationExpression constructor(
+    private val left: Expression,
+    private val right: Expression
+): Expression {
+
+    override fun interpret(): Float {
+        return left.interpret() * right.interpret()
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
+val multiplicationExpression = MultiplicationExpression(
+    left = NumberExpression(10f),
+    right = NumberExpression(10f)
+)
+val additionExpression = AdditionExpression(
+    left = NumberExpression(10f),
+    right = NumberExpression(10f)
+)
 
+val expression = AdditionExpression(
+    left = NumberExpression(2f),
+    right = AdditionExpression(
+        left = NumberExpression(2f),
+        right = NumberExpression(6f)
+    )
+)
+println("Multiplication Result=${multiplicationExpression.interpret()}")
+println("Addition Result=${additionExpression.interpret()}")
+println("Last Expression Result=${expression.interpret()}")
 ```
 
 **Вывод:**
 
 ```txt
-
+Multiplication Result=100.0
+Addition Result=20.0
+Last Expression Result=10.0
 ```
 
-## {Название}
+## Memento
 
-
+Паттерн `Memento` позволяет сохранять и восстанавливать предыдущее состояние объекта. 
 
 **Реализация:**
 
 ```kotlin
+internal data class Message(
+    val text: String
+)
 
+internal interface Originator <T> {
+    fun create(): T
+    fun restore(memento: T)
+}
+
+internal class MessageOriginator constructor(
+    private var text: String
+): Originator<Message> {
+
+    override fun create(): Message {
+        return Message(text = text)
+    }
+
+    override fun restore(memento: Message) {
+        this@MessageOriginator.text = memento.text
+    }
+}
+
+internal interface Caretaker <T> {
+    fun save(originator: Originator<T>)
+    fun undo(originator: Originator<T>)
+}
+
+internal class MessageCaretaker: Caretaker<Message> {
+    private val stack = mutableListOf<Message>()
+
+    override fun save(originator: Originator<Message>) {
+        val memento = originator.create()
+        stack.add(memento)
+
+        println("Save new $memento")
+    }
+
+    override fun undo(originator: Originator<Message>) {
+        val previous = stack.removeLastOrNull() ?: return
+        originator.restore(previous)
+
+        println("Undo previous $previous")
+        println("It is remaining $stack")
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
+val originator = MessageOriginator(text = "Initial message")
+val caretaker = MessageCaretaker()
+caretaker.save(originator)
 
+originator.restore(Message(text = "First message"))
+originator.restore(Message(text = "Second message"))
+caretaker.save(originator)
+
+originator.restore(Message(text = "Third message"))
+caretaker.save(originator)
+caretaker.undo(originator)
 ```
 
 **Вывод:**
 
 ```txt
-
+Save new Message(text=Initial message)
+Save new Message(text=Second message)
+Save new Message(text=Third message)
+Undo previous Message(text=Third message)
+It is remaining [Message(text=Initial message), Message(text=Second message)]
 ```
 
-## {Название}
+## Visitor
 
-
+`Visitor` позволяет выполнять различные операции над группой объектов и добавлять новые операции к уже существующим объектам без изменения их классов.
 
 **Реализация:**
 
 ```kotlin
+internal interface Visitable {
+    fun <T: Visitable> accept(visitor: Visitor<T>)
+}
 
+internal interface PriceValue: Visitable {
+    val price: Float
+}
+
+internal interface WeightValue: Visitable {
+    val weight: Float
+}
+
+internal data class Milk(
+    override val price: Float,
+    override val weight: Float
+): PriceValue, WeightValue {
+    override fun <T: Visitable> accept(visitor: Visitor<T>) {
+        visitor.visit(this as T)
+    }
+}
+
+internal data class Tea(
+    override val price: Float,
+    override val weight: Float
+): PriceValue, WeightValue {
+    override fun <T: Visitable> accept(visitor: Visitor<T>) {
+        visitor.visit(this as T)
+    }
+}
+
+internal data class Chocolate(
+    override val price: Float,
+    override val weight: Float
+): PriceValue, WeightValue {
+    override fun <T: Visitable> accept(visitor: Visitor<T>) {
+        visitor.visit(this as T)
+    }
+}
+
+internal interface Visitor <T: Visitable> {
+
+    var result: Float
+
+    fun visit(item: T)
+}
+
+internal class PriceCalculator : Visitor<PriceValue> {
+
+    override var result: Float = 0f
+
+    override fun visit(item: PriceValue) {
+        result += item.price
+    }
+}
+
+internal class WeightCalculator : Visitor<WeightValue> {
+
+    override var result: Float = 0f
+
+    override fun visit(item: WeightValue) {
+        result += item.weight
+    }
+}
+
+internal class Receipt: Visitable {
+
+    private val items = mutableListOf<Visitable>()
+
+    internal fun add(item: Visitable) {
+        items.add(item)
+    }
+
+    internal fun remove(item: Visitable) {
+        items.remove(item)
+    }
+
+    override fun <T : Visitable> accept(visitor: Visitor<T>) {
+        items.forEach { visitor.visit(it as T) }
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
+val receipt = Receipt()
+    receipt.add(Milk(price = 150f, weight = 1000f))
+    receipt.add(Tea(price = 100f, weight = 50f))
+    receipt.add(Tea(price = 100f, weight = 50f))
+    receipt.remove(Tea(price = 100f, weight = 50f))
+    receipt.add(Chocolate(price = 200f, weight = 80f))
 
+    val priceCalculator = PriceCalculator()
+    val weightCalculator = WeightCalculator()
+
+    receipt.accept(priceCalculator)
+    receipt.accept(weightCalculator)
+
+    println("Total price is ${priceCalculator.result} and total weight is ${weightCalculator.result}")
 ```
 
 **Вывод:**
 
 ```txt
-
+Total price is 450.0 and total weight is 1130.0
 ```
 
 ## {Название}
