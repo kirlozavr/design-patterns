@@ -5,13 +5,13 @@ internal fun observer() {
 
     val actionsUpdater = ActionsUpdater()
     val observerA = Observer { action ->
-        println("Observer A received action $action")
+        println("Observer A received \"$action\" action")
     }
     val observerB = Observer { action ->
-        println("Observer B received action $action")
+        println("Observer B received \"$action\" action")
     }
     val observerC = Observer { action ->
-        println("Observer C received action $action")
+        println("Observer C received \"$action\" action")
     }
     actionsUpdater.addObserver(observerA)
     actionsUpdater.addObserver(observerB)

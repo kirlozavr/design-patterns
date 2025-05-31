@@ -714,136 +714,399 @@ println("The first service name is ${firstService.getName()} and the last one na
 The first service name is FirstService and the last one name is SecondService
 ```
 
-## {Название}
+## Behavioral patterns
 
+## Command
 
+Паттерн `Command` превращает запросы в объекты, которые можно передавать как аргументы при вызове методов, ставить их в очередь, отменять и т.д.
 
 **Реализация:**
 
 ```kotlin
+internal interface Command {
+    fun execute(currentValue: Float): Float
+}
 
+internal class AddCommand constructor(
+    private val operand: Float
+): Command {
+
+    override fun execute(currentValue: Float): Float {
+        return currentValue + operand
+    }
+}
+
+internal class SubtractCommand constructor(
+    private val operand: Float
+): Command {
+
+    override fun execute(currentValue: Float): Float {
+        return currentValue - operand
+    }
+}
+
+internal class DivideCommand constructor(
+    private val operand: Float
+): Command {
+
+    override fun execute(currentValue: Float): Float {
+        return currentValue / operand
+    }
+}
+
+internal class MultiplyCommand constructor(
+    private val operand: Float
+): Command {
+
+    override fun execute(currentValue: Float): Float {
+        return currentValue * operand
+    }
+}
+
+internal class Calculator {
+    private val operations = mutableListOf<Command>()
+
+    internal fun addCommand(command: Command) {
+        operations.add(command)
+    }
+
+    internal fun undo() {
+        operations.removeLastOrNull()
+    }
+
+    internal fun calculate(initialValue: Float = 0f): Float {
+        var result = initialValue
+        operations.forEach {
+            result = it.execute(result)
+        }
+        return result
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
-
+ val calculator = Calculator().apply {
+     addCommand(AddCommand(10f))
+    addCommand(MultiplyCommand(10f))
+    addCommand(SubtractCommand(10f))
+    addCommand(DivideCommand(9f))
+    addCommand(DivideCommand(10f))
+    undo()
+ }
+val result = calculator.calculate()
+println("The result of the calculation is $result")
 ```
 
 **Вывод:**
 
 ```txt
-
+The result of the calculation is 10.0
 ```
 
-## {Название}
+## Observer
 
-
+Паттерн `Observer` позволяет одному объекту публиковать информацию об изменениях его состояния.
+Другие объекты в свою очередь могут подписаться на прослушивание этих изменений.
 
 **Реализация:**
 
 ```kotlin
+internal fun interface Observer {
+    fun onAction(action: String)
+}
 
+internal class ActionsUpdater {
+    private val observers = mutableListOf<Observer>()
+
+    internal fun addObserver(observer: Observer) {
+        if (observers.contains(observer)) return
+        observers.add(observer)
+    }
+
+    internal fun removeObserver(observer: Observer) {
+        observers.remove(observer)
+    }
+
+    internal fun update(newAction: String) {
+        observers.forEach { it.onAction(action = newAction) }
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
-
+val actionsUpdater = ActionsUpdater()
+val observerA = Observer { action ->
+    println("Observer A received \"$action\" action")
+}
+val observerB = Observer { action ->
+    println("Observer B received \"$action\" action")
+}
+val observerC = Observer { action ->
+    println("Observer C received \"$action\" action")
+}
+actionsUpdater.addObserver(observerA)
+actionsUpdater.addObserver(observerB)
+actionsUpdater.addObserver(observerB)
+actionsUpdater.addObserver(observerC)
+actionsUpdater.addObserver(observerC)
+actionsUpdater.removeObserver(observerC)
+actionsUpdater.update("some action")
 ```
 
 **Вывод:**
 
 ```txt
-
+Observer A received "some action" action
+Observer B received "some action" action
 ```
 
-## {Название}
+## Strategy
 
-
+`Strategy` позволяет определять семейства алгоритмов, делать их взаимозаменяемыми и затем в runtime иметь возможность менять реализацию по необходимости.
 
 **Реализация:**
 
 ```kotlin
+internal interface Transport {
+    fun travel()
+}
 
+internal class Bus: Transport {
+    override fun travel() {
+        println("Travel by Bus")
+    }
+}
+
+internal class Plane: Transport {
+    override fun travel() {
+        println("Travel by Plane")
+    }
+}
+
+internal class Ship: Transport {
+    override fun travel() {
+        println("Travel by Ship")
+    }
+}
+
+internal class TravellingClient constructor(
+    private var transport: Transport
+) {
+
+    internal fun travel() {
+        transport.travel()
+    }
+
+    internal fun change(transport: Transport) {
+        this@TravellingClient.transport = transport
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
-
+val travellingClient = TravellingClient(Bus())
+travellingClient.travel()
+travellingClient.change(Plane())
+travellingClient.travel()
+travellingClient.change(Ship())
+travellingClient.travel()
 ```
 
 **Вывод:**
 
 ```txt
-
+Travel by Bus
+Travel by Plane
+Travel by Ship
 ```
 
-## {Название}
+## State
 
-
+Паттерн `State` позволяет объекту менять свою логику в зависимости от текущего состояния.
 
 **Реализация:**
 
 ```kotlin
+internal sealed interface State {
 
+    data object Uninitialized: State
+    data class Initialized(
+        val name: String
+    ): State
+}
+
+internal class StateMachine {
+
+    private var state: State = State.Uninitialized
+
+    internal fun isInitialized(): Boolean {
+        return state is State.Initialized
+    }
+
+    internal fun setName(name: String) {
+        state = State.Initialized(name = name)
+    }
+
+    internal fun getName(): String {
+        return when(val current = state) {
+            is State.Initialized -> current.name
+            is State.Uninitialized -> "Unknown"
+        }
+    }
+
+    internal fun shutdown() {
+        state = State.Uninitialized
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
-
+val stateMachine = StateMachine()
+    println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
+    stateMachine.setName("new name")
+    println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
+    stateMachine.shutdown()
+    println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
 ```
 
 **Вывод:**
 
 ```txt
-
+State: name=Unknown and isInitialized=false
+State: name=new name and isInitialized=true
+State: name=Unknown and isInitialized=false
 ```
 
-## {Название}
+## Chain Of Responsibility
 
-
+`Chain Of Responsibility` позволяет передавать запрос последовательно по цепочке обработчиков, те в свою очередь могут как либо модифицировать запрос, либо просто передавать запрос дальше по цепочке не трогая его.
 
 **Реализация:**
 
 ```kotlin
+internal interface Chain {
+    fun addMessage(inputMessage: String): String
+}
 
+internal class FirstChain constructor(
+    private val next: Chain? = null
+): Chain {
+    override fun addMessage(inputMessage: String): String {
+        return inputMessage + next?.addMessage("First ")
+    }
+}
+
+internal class SecondChain constructor(
+    private val next: Chain? = null
+): Chain {
+    override fun addMessage(inputMessage: String): String {
+        return inputMessage + next?.addMessage("Second ")
+    }
+}
+
+internal class ThirdChain constructor(
+    private val next: Chain? = null
+): Chain {
+    override fun addMessage(inputMessage: String): String {
+        return inputMessage + next?.addMessage("Third ")
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
-
+val first = FirstChain()
+val second = SecondChain(first)
+val third = ThirdChain(second)
+val result = third.addMessage("The beginning of the chain: ")
+println(result)
 ```
 
 **Вывод:**
 
 ```txt
-
+The beginning of the chain: Third Second null
 ```
 
-## {Название}
+## Mediator
 
-
+`Mediator` предоставляет централизованное управление различными объектами в системе.
 
 **Реализация:**
 
 ```kotlin
+internal interface User {
+    fun sendMessage(message: String)
+    fun onReceivedMessage(message: String)
+}
 
+internal class ChatUser constructor(
+    private val mediator: Mediator,
+    private val name: String
+): User {
+
+    override fun sendMessage(message: String) {
+        mediator.sendMessage(message = message)
+    }
+
+    override fun onReceivedMessage(message: String) {
+        println("$name received the message=$message")
+    }
+}
+
+internal interface Mediator {
+    fun sendMessage(message: String)
+    fun addUser(user: User)
+    fun removeUser(user: User)
+}
+
+internal class ChatMediator: Mediator {
+    private val users = mutableListOf<User>()
+
+    override fun sendMessage(message: String) {
+        users.forEach { it.onReceivedMessage(message = message) }
+    }
+
+    override fun addUser(user: User) {
+        if (users.contains(user)) return
+        users.add(user)
+    }
+
+    override fun removeUser(user: User) {
+        users.remove(user)
+    }
+}
 ```
 
 **Применение:**
 
 ```kotlin
+val mediator = ChatMediator()
+val bob = ChatUser(mediator, "bob")
+mediator.addUser(bob)
+val martin = ChatUser(mediator, "martin")
+mediator.addUser(martin)
+val steve = ChatUser(mediator, "steve")
+mediator.addUser(steve)
+mediator.removeUser(steve)
 
+bob.sendMessage("Hello everyone!")
 ```
 
 **Вывод:**
 
 ```txt
-
+bob received the message=Hello everyone!
+martin received the message=Hello everyone!
 ```
 
 ## {Название}

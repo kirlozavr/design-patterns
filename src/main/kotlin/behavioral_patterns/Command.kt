@@ -4,22 +4,22 @@ internal fun command() {
     println("\nCommand Pattern")
 
     val calculator = Calculator().apply {
-        addCommand(PlusCommand(10f))
+        addCommand(AddCommand(10f))
         addCommand(MultiplyCommand(10f))
-        addCommand(MinusCommand(10f))
+        addCommand(SubtractCommand(10f))
         addCommand(DivideCommand(9f))
         addCommand(DivideCommand(10f))
         undo()
     }
     val result = calculator.calculate()
-    println("Result of calculation is $result")
+    println("The result of the calculation is $result")
 }
 
 internal interface Command {
     fun execute(currentValue: Float): Float
 }
 
-internal class PlusCommand constructor(
+internal class AddCommand constructor(
     private val operand: Float
 ): Command {
 
@@ -28,7 +28,7 @@ internal class PlusCommand constructor(
     }
 }
 
-internal class MinusCommand constructor(
+internal class SubtractCommand constructor(
     private val operand: Float
 ): Command {
 

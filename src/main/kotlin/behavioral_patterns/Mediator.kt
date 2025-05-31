@@ -8,9 +8,9 @@ internal fun mediator() {
     mediator.addUser(bob)
     val martin = ChatUser(mediator, "martin")
     mediator.addUser(martin)
-    val oleg = ChatUser(mediator, "oleg")
-    mediator.addUser(oleg)
-    mediator.removeUser(oleg)
+    val steve = ChatUser(mediator, "steve")
+    mediator.addUser(steve)
+    mediator.removeUser(steve)
 
     bob.sendMessage("Hello everyone!")
 }
