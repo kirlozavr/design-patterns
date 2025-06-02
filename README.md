@@ -14,7 +14,7 @@
 Из особенностей можно выделить то, что ViewModel ничего не знает о View, а View, в свою очередь, знает о ViewModel.
 View слой не должен иметь никакой логики, кроме той, что отвечает за обновление UI, всю подготовку и обработку данных выполняет ViewModel или Model слой.
 
-Уведомление ViewModel о событиях происходит через методы `viewModel.onSaveButtonClicked()` и т.д., которые дергает View слой.
+Уведомление ViewModel о событиях происходит через методы `viewModel.onSaveButtonClicked()` и т.д., которые вызывает View слой.
 Чтобы получать обновления UI, View слой подписывается на изменение соответствующих данных у ViewModel, например, `viewModel.onProfileImageEvent()`.
 Для этого можно использовать LiveData, Flow или любой другой инструмент поддерживающий Observable паттерн.
 Так же можно подписываться на изменения в самом XML.
@@ -127,9 +127,9 @@ internal class Builder private constructor() {
 
 ```kotlin
 val person = Builder(name = "Bob")
-        .setAge(18)
-        .setHeight(190)
-        .build()
+    .setAge(18)
+    .setHeight(190)
+    .build()
 ```
 
 **Вывод:**
@@ -363,8 +363,8 @@ internal class ListPrinter <T> constructor(
 
 ```kotlin
 val listPrinter = ListPrinter(
-        list = mutableListOf(124, 142)
-    )
+    list = mutableListOf(124, 142)
+)
 listPrinter.add(966)
 ```
 
@@ -376,7 +376,7 @@ listPrinter.add(966)
 
 ## Adapter
 
-`Adapter` позволяет связывать 2 несовместимых объекта
+`Adapter` позволяет связывать 2 несовместимых объекта.
 
 **Реализация:**
 
@@ -500,12 +500,12 @@ internal class SomeMediaHosting constructor(
 
 ```kotlin
 val audioPlayer = AudioPlayer()
-    val videoPlayer = VideoPlayer()
-    val mediaHosting = SomeMediaHosting(
-        audioPlayer = audioPlayer,
-        videoPlayer = videoPlayer
-    )
-    mediaHosting.watchVideo("The best video")
+val videoPlayer = VideoPlayer()
+val mediaHosting = SomeMediaHosting(
+    audioPlayer = audioPlayer,
+    videoPlayer = videoPlayer
+)
+mediaHosting.watchVideo("The best video")
 ```
 
 **Вывод:**
@@ -670,7 +670,6 @@ internal class CacheManagerImpl: CacheManager {
 }
 
 internal interface ServiceCreator {
-
     fun <T: Service> createService(serviceKClass: KClass<T>): Service
 }
 
@@ -685,7 +684,6 @@ internal class ServiceCreatorImpl: ServiceCreator {
 }
 
 internal object ServiceLocator {
-
     private val cacheManager: CacheManager = CacheManagerImpl()
     private val serviceCreator: ServiceCreator = ServiceCreatorImpl()
 
@@ -720,6 +718,8 @@ The first service name is FirstService and the last one name is SecondService
 ```
 
 ## Behavioral patterns
+
+`Behavioral patterns` решают проблему взаимодействия между объектами.
 
 ## Command
 
@@ -792,14 +792,14 @@ internal class Calculator {
 **Применение:**
 
 ```kotlin
- val calculator = Calculator().apply {
-     addCommand(AddCommand(10f))
+val calculator = Calculator().apply {
+    addCommand(AddCommand(10f))
     addCommand(MultiplyCommand(10f))
     addCommand(SubtractCommand(10f))
     addCommand(DivideCommand(9f))
     addCommand(DivideCommand(10f))
     undo()
- }
+}
 val result = calculator.calculate()
 println("The result of the calculation is $result")
 ```
@@ -901,7 +901,6 @@ internal class Ship: Transport {
 internal class TravellingClient constructor(
     private var transport: Transport
 ) {
-
     internal fun travel() {
         transport.travel()
     }
@@ -939,7 +938,6 @@ Travel by Ship
 
 ```kotlin
 internal sealed interface State {
-
     data object Uninitialized: State
     data class Initialized(
         val name: String
@@ -947,7 +945,6 @@ internal sealed interface State {
 }
 
 internal class StateMachine {
-
     private var state: State = State.Uninitialized
 
     internal fun isInitialized(): Boolean {
@@ -975,11 +972,11 @@ internal class StateMachine {
 
 ```kotlin
 val stateMachine = StateMachine()
-    println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
-    stateMachine.setName("new name")
-    println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
-    stateMachine.shutdown()
-    println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
+println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
+stateMachine.setName("new name")
+println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
+stateMachine.shutdown()
+println("State: name=${stateMachine.getName()} and isInitialized=${stateMachine.isInitialized()}")
 ```
 
 **Вывод:**
@@ -1058,7 +1055,6 @@ internal class ChatUser constructor(
     private val mediator: Mediator,
     private val name: String
 ): User {
-
     override fun sendMessage(message: String) {
         mediator.sendMessage(message = message)
     }
@@ -1122,7 +1118,6 @@ martin received the message=Hello everyone!
 
 ```kotlin
 internal interface Iterator <out T> {
-
     fun hasNext(): Boolean
 
     fun next(): T
@@ -1131,7 +1126,6 @@ internal interface Iterator <out T> {
 internal class ListIterator <out T> constructor(
     private val list: List<T>
 ): Iterator<T> {
-
     private var position: Int = 0
 
     override fun hasNext(): Boolean {
@@ -1148,7 +1142,6 @@ internal interface Iterable <out T> {
 }
 
 internal class ListIterable <T> : Iterable<T> {
-
     private val list = mutableListOf<T>()
 
     internal fun add(element: T) {
@@ -1207,7 +1200,6 @@ internal class AdditionExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         return left.interpret() + right.interpret()
     }
@@ -1217,7 +1209,6 @@ internal class SubtractionExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         return left.interpret() - right.interpret()
     }
@@ -1227,7 +1218,6 @@ internal class DivisionExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         val divisor = right.interpret()
         if (divisor == 0f) {
@@ -1241,7 +1231,6 @@ internal class MultiplicationExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         return left.interpret() * right.interpret()
     }
@@ -1299,13 +1288,12 @@ internal interface Originator <T> {
 internal class MessageOriginator constructor(
     private var text: String
 ): Originator<Message> {
-
     override fun create(): Message {
         return Message(text = text)
     }
 
     override fun restore(memento: Message) {
-        this@MessageOriginator.text = memento.text
+        text = memento.text
     }
 }
 
@@ -1407,14 +1395,12 @@ internal data class Chocolate(
 }
 
 internal interface Visitor <T: Visitable> {
-
     var result: Float
 
     fun visit(item: T)
 }
 
 internal class PriceCalculator : Visitor<PriceValue> {
-
     override var result: Float = 0f
 
     override fun visit(item: PriceValue) {
@@ -1423,7 +1409,6 @@ internal class PriceCalculator : Visitor<PriceValue> {
 }
 
 internal class WeightCalculator : Visitor<WeightValue> {
-
     override var result: Float = 0f
 
     override fun visit(item: WeightValue) {
@@ -1432,7 +1417,6 @@ internal class WeightCalculator : Visitor<WeightValue> {
 }
 
 internal class Receipt: Visitable {
-
     private val items = mutableListOf<Visitable>()
 
     internal fun add(item: Visitable) {
@@ -1453,19 +1437,19 @@ internal class Receipt: Visitable {
 
 ```kotlin
 val receipt = Receipt()
-    receipt.add(Milk(price = 150f, weight = 1000f))
-    receipt.add(Tea(price = 100f, weight = 50f))
-    receipt.add(Tea(price = 100f, weight = 50f))
-    receipt.remove(Tea(price = 100f, weight = 50f))
-    receipt.add(Chocolate(price = 200f, weight = 80f))
+receipt.add(Milk(price = 150f, weight = 1000f))
+receipt.add(Tea(price = 100f, weight = 50f))
+receipt.add(Tea(price = 100f, weight = 50f))
+receipt.remove(Tea(price = 100f, weight = 50f))
+receipt.add(Chocolate(price = 200f, weight = 80f))
 
-    val priceCalculator = PriceCalculator()
-    val weightCalculator = WeightCalculator()
+val priceCalculator = PriceCalculator()
+val weightCalculator = WeightCalculator()
 
-    receipt.accept(priceCalculator)
-    receipt.accept(weightCalculator)
+receipt.accept(priceCalculator)
+receipt.accept(weightCalculator)
 
-    println("Total price is ${priceCalculator.result} and total weight is ${weightCalculator.result}")
+println("Total price is ${priceCalculator.result} and total weight is ${weightCalculator.result}")
 ```
 
 **Вывод:**

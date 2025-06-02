@@ -22,7 +22,6 @@ internal interface Command {
 internal class AddCommand constructor(
     private val operand: Float
 ): Command {
-
     override fun execute(currentValue: Float): Float {
         return currentValue + operand
     }
@@ -31,7 +30,6 @@ internal class AddCommand constructor(
 internal class SubtractCommand constructor(
     private val operand: Float
 ): Command {
-
     override fun execute(currentValue: Float): Float {
         return currentValue - operand
     }
@@ -40,7 +38,6 @@ internal class SubtractCommand constructor(
 internal class DivideCommand constructor(
     private val operand: Float
 ): Command {
-
     override fun execute(currentValue: Float): Float {
         return currentValue / operand
     }
@@ -49,7 +46,6 @@ internal class DivideCommand constructor(
 internal class MultiplyCommand constructor(
     private val operand: Float
 ): Command {
-
     override fun execute(currentValue: Float): Float {
         return currentValue * operand
     }

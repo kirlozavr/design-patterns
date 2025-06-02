@@ -42,7 +42,6 @@ internal class CacheManagerImpl: CacheManager {
 }
 
 internal interface ServiceCreator {
-
     fun <T: Service> createService(serviceKClass: KClass<T>): Service
 }
 
@@ -57,7 +56,6 @@ internal class ServiceCreatorImpl: ServiceCreator {
 }
 
 internal object ServiceLocator {
-
     private val cacheManager: CacheManager = CacheManagerImpl()
     private val serviceCreator: ServiceCreator = ServiceCreatorImpl()
 

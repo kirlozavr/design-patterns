@@ -18,7 +18,6 @@ internal data class Image(
 )
 
 internal abstract class ImageSaver {
-
     internal fun saveImage(image: Image) {
         val uploadLink = getUploadLink()
         uploadImage(localPath = image.photoPath, uploadLink = uploadLink)
@@ -33,7 +32,6 @@ internal abstract class ImageSaver {
 }
 
 internal class ProfileImageSaver: ImageSaver() {
-
     override fun getUploadLink(): String {
         return "profile upload link"
     }
@@ -48,7 +46,6 @@ internal class ProfileImageSaver: ImageSaver() {
 }
 
 internal class MessageImageSaver: ImageSaver() {
-
     override fun getUploadLink(): String {
         return "message upload link"
     }

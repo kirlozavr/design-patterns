@@ -40,7 +40,6 @@ internal class AdditionExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         return left.interpret() + right.interpret()
     }
@@ -50,7 +49,6 @@ internal class SubtractionExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         return left.interpret() - right.interpret()
     }
@@ -60,7 +58,6 @@ internal class DivisionExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         val divisor = right.interpret()
         if (divisor == 0f) {
@@ -74,7 +71,6 @@ internal class MultiplicationExpression constructor(
     private val left: Expression,
     private val right: Expression
 ): Expression {
-
     override fun interpret(): Float {
         return left.interpret() * right.interpret()
     }

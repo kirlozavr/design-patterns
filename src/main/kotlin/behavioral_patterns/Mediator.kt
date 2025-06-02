@@ -24,7 +24,6 @@ internal class ChatUser constructor(
     private val mediator: Mediator,
     private val name: String
 ): User {
-
     override fun sendMessage(message: String) {
         mediator.sendMessage(message = message)
     }

@@ -28,13 +28,12 @@ internal interface Originator <T> {
 internal class MessageOriginator constructor(
     private var text: String
 ): Originator<Message> {
-
     override fun create(): Message {
         return Message(text = text)
     }
 
     override fun restore(memento: Message) {
-        this@MessageOriginator.text = memento.text
+        text = memento.text
     }
 }
 

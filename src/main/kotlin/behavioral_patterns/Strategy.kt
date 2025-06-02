@@ -36,7 +36,6 @@ internal class Ship: Transport {
 internal class TravellingClient constructor(
     private var transport: Transport
 ) {
-
     internal fun travel() {
         transport.travel()
     }

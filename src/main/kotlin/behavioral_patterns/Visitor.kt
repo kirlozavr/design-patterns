@@ -59,14 +59,12 @@ internal data class Chocolate(
 }
 
 internal interface Visitor <T: Visitable> {
-
     var result: Float
 
     fun visit(item: T)
 }
 
 internal class PriceCalculator : Visitor<PriceValue> {
-
     override var result: Float = 0f
 
     override fun visit(item: PriceValue) {
@@ -75,7 +73,6 @@ internal class PriceCalculator : Visitor<PriceValue> {
 }
 
 internal class WeightCalculator : Visitor<WeightValue> {
-
     override var result: Float = 0f
 
     override fun visit(item: WeightValue) {
@@ -84,7 +81,6 @@ internal class WeightCalculator : Visitor<WeightValue> {
 }
 
 internal class Receipt: Visitable {
-
     private val items = mutableListOf<Visitable>()
 
     internal fun add(item: Visitable) {

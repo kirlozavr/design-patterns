@@ -12,7 +12,6 @@ internal fun state() {
 }
 
 internal sealed interface State {
-
     data object Uninitialized: State
     data class Initialized(
         val name: String
@@ -20,7 +19,6 @@ internal sealed interface State {
 }
 
 internal class StateMachine {
-
     private var state: State = State.Uninitialized
 
     internal fun isInitialized(): Boolean {

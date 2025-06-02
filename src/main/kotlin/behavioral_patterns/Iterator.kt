@@ -16,7 +16,6 @@ internal fun iterator() {
 }
 
 internal interface Iterator <out T> {
-
     fun hasNext(): Boolean
 
     fun next(): T
@@ -25,7 +24,6 @@ internal interface Iterator <out T> {
 internal class ListIterator <out T> constructor(
     private val list: List<T>
 ): Iterator<T> {
-
     private var position: Int = 0
 
     override fun hasNext(): Boolean {
@@ -42,7 +40,6 @@ internal interface Iterable <out T> {
 }
 
 internal class ListIterable <T> : Iterable<T> {
-
     private val list = mutableListOf<T>()
 
     internal fun add(element: T) {
