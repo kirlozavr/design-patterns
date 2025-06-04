@@ -282,7 +282,6 @@ internal class IosDialog: Dialog {
     }
 }
 
-
 internal interface UiFactory {
     fun createButton(): Button
     fun createDialog(): Dialog
