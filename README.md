@@ -652,7 +652,6 @@ internal class SecondService: Service {
 
 internal interface CacheManager {
     fun addService(service: Service)
-
     fun <T : Service> getService(serviceKClass: KClass<T>): T?
 }
 
@@ -994,30 +993,33 @@ State: name=Unknown and isInitialized=false
 
 ```kotlin
 internal interface Chain {
-    fun addMessage(inputMessage: String): String
+    fun handleMessage(inputMessage: String): String
 }
 
 internal class FirstChain constructor(
     private val next: Chain? = null
 ): Chain {
-    override fun addMessage(inputMessage: String): String {
-        return inputMessage + next?.addMessage("First ")
+    override fun handleMessage(inputMessage: String): String {
+        val message = "The First handler received the message: [$inputMessage]"
+        return next?.handleMessage(message) ?: message
     }
 }
 
 internal class SecondChain constructor(
     private val next: Chain? = null
 ): Chain {
-    override fun addMessage(inputMessage: String): String {
-        return inputMessage + next?.addMessage("Second ")
+    override fun handleMessage(inputMessage: String): String {
+        val message = "The Second handler received the message: [$inputMessage]"
+        return next?.handleMessage(message) ?: message
     }
 }
 
 internal class ThirdChain constructor(
     private val next: Chain? = null
 ): Chain {
-    override fun addMessage(inputMessage: String): String {
-        return inputMessage + next?.addMessage("Third ")
+    override fun handleMessage(inputMessage: String): String {
+        val message = "The Third handler received the message: [$inputMessage]"
+        return next?.handleMessage(message) ?: message
     }
 }
 ```
@@ -1028,14 +1030,14 @@ internal class ThirdChain constructor(
 val first = FirstChain()
 val second = SecondChain(first)
 val third = ThirdChain(second)
-val result = third.addMessage("The beginning of the chain: ")
+val result = third.handleMessage("Some message")
 println(result)
 ```
 
 **Вывод:**
 
 ```txt
-The beginning of the chain: Third Second null
+The First handler received the message: [The Second handler received the message: [The Third handler received the message: [Some message]]]
 ```
 
 ## Mediator

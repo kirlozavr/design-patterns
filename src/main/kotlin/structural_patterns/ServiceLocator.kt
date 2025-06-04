@@ -25,7 +25,6 @@ internal class SecondService: Service {
 
 internal interface CacheManager {
     fun addService(service: Service)
-
     fun <T : Service> getService(serviceKClass: KClass<T>): T?
 }
 
