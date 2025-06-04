@@ -17,7 +17,6 @@ internal fun iterator() {
 
 internal interface Iterator <out T> {
     fun hasNext(): Boolean
-
     fun next(): T
 }
 

@@ -1049,7 +1049,7 @@ The First handler received the message: [The Second handler received the message
 ```kotlin
 internal interface User {
     fun sendMessage(message: String)
-    fun onReceivedMessage(message: String)
+    fun onReceiveMessage(message: String)
 }
 
 internal class ChatUser constructor(
@@ -1060,7 +1060,7 @@ internal class ChatUser constructor(
         mediator.sendMessage(message = message)
     }
 
-    override fun onReceivedMessage(message: String) {
+    override fun onReceiveMessage(message: String) {
         println("$name received the message=$message")
     }
 }
@@ -1075,7 +1075,7 @@ internal class ChatMediator: Mediator {
     private val users = mutableListOf<User>()
 
     override fun sendMessage(message: String) {
-        users.forEach { it.onReceivedMessage(message = message) }
+        users.forEach { it.onReceiveMessage(message = message) }
     }
 
     override fun addUser(user: User) {
@@ -1093,11 +1093,11 @@ internal class ChatMediator: Mediator {
 
 ```kotlin
 val mediator = ChatMediator()
-val bob = ChatUser(mediator, "bob")
+val bob = ChatUser(mediator, "Bob")
 mediator.addUser(bob)
-val martin = ChatUser(mediator, "martin")
+val martin = ChatUser(mediator, "Martin")
 mediator.addUser(martin)
-val steve = ChatUser(mediator, "steve")
+val steve = ChatUser(mediator, "Steve")
 mediator.addUser(steve)
 mediator.removeUser(steve)
 
@@ -1107,8 +1107,8 @@ bob.sendMessage("Hello everyone!")
 **Вывод:**
 
 ```txt
-bob received the message=Hello everyone!
-martin received the message=Hello everyone!
+Bob received the message=Hello everyone!
+Martin received the message=Hello everyone!
 ```
 
 ## Iterator
@@ -1120,7 +1120,6 @@ martin received the message=Hello everyone!
 ```kotlin
 internal interface Iterator <out T> {
     fun hasNext(): Boolean
-
     fun next(): T
 }
 
@@ -1396,24 +1395,25 @@ internal data class Chocolate(
 }
 
 internal interface Visitor <T: Visitable> {
-    var result: Float
-
+    val result: Float
     fun visit(item: T)
 }
 
 internal class PriceCalculator : Visitor<PriceValue> {
-    override var result: Float = 0f
+    private var _result: Float = 0f
+    override val result get() = _result
 
     override fun visit(item: PriceValue) {
-        result += item.price
+        _result += item.price
     }
 }
 
 internal class WeightCalculator : Visitor<WeightValue> {
-    override var result: Float = 0f
+    private var _result: Float = 0f
+    override val result get() = _result
 
     override fun visit(item: WeightValue) {
-        result += item.weight
+        _result += item.weight
     }
 }
 

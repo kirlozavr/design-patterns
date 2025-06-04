@@ -4,11 +4,11 @@ internal fun mediator() {
     println("\nMediator Pattern")
 
     val mediator = ChatMediator()
-    val bob = ChatUser(mediator, "bob")
+    val bob = ChatUser(mediator, "Bob")
     mediator.addUser(bob)
-    val martin = ChatUser(mediator, "martin")
+    val martin = ChatUser(mediator, "Martin")
     mediator.addUser(martin)
-    val steve = ChatUser(mediator, "steve")
+    val steve = ChatUser(mediator, "Steve")
     mediator.addUser(steve)
     mediator.removeUser(steve)
 
@@ -17,7 +17,7 @@ internal fun mediator() {
 
 internal interface User {
     fun sendMessage(message: String)
-    fun onReceivedMessage(message: String)
+    fun onReceiveMessage(message: String)
 }
 
 internal class ChatUser constructor(
@@ -28,7 +28,7 @@ internal class ChatUser constructor(
         mediator.sendMessage(message = message)
     }
 
-    override fun onReceivedMessage(message: String) {
+    override fun onReceiveMessage(message: String) {
         println("$name received the message=$message")
     }
 }
@@ -43,7 +43,7 @@ internal class ChatMediator: Mediator {
     private val users = mutableListOf<User>()
 
     override fun sendMessage(message: String) {
-        users.forEach { it.onReceivedMessage(message = message) }
+        users.forEach { it.onReceiveMessage(message = message) }
     }
 
     override fun addUser(user: User) {
